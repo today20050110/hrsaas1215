@@ -37,6 +37,16 @@ module.exports = {
         overlay: {
             warnings: false,
             errors: true
+        },
+        // 配置反向代理
+        proxy: {
+            // 當地址中有/api的時候會觸發代理機制
+            '/api': {
+                target: 'http://ihrm-java.itheima.net/', // 要代理的服務器地址 這裡不用寫/api
+                changeOrigin: true // 是否跨域
+                    // 重寫路徑
+                    // pathRewrite: {}
+            }
         }
     },
     configureWebpack: {

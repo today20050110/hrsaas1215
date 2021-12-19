@@ -3,17 +3,19 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">
+          <img src="@/assets/common/login-logo.png" alt="">
+        </h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="mobile">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
           ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
+          v-model="loginForm.mobile"
+          placeholder="請輸入手機號"
           name="username"
           type="text"
           tabindex="1"
@@ -30,22 +32,23 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="請輸入密碼"
           name="password"
           tabindex="2"
           auto-complete="on"
           @keyup.enter.native="handleLogin"
         />
+        <!-- enter是按鍵的修飾符 native也是修飾符表示監聽組件的原生事件 -->
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button class="loginBtn" :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登錄</el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+        <span style="margin-right:20px;">帳號: 13800000002</span>
+        <span> 密碼: 123456</span>
       </div>
 
     </el-form>
@@ -53,33 +56,30 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validMobile } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+    const validateMobile = (rule, value, callback) => {
+      if (!validMobile(value)) {
+        callback(new Error('手機號格式部正確'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        mobile: '13800000002',
+        password: '123456'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        mobile: [{ required: true, trigger: 'blur', message: '手機號不能為空' }, {
+          validator: validateMobile, trigger: 'blur'
+        }],
+        password: [{ required: true, trigger: 'blur', message: '密碼不能為空' }, {
+          trigger: 'blur', min: 6, max: 16, message: '密碼長度為6到16位之間'
+        }]
       },
       loading: false,
       passwordType: 'password',
@@ -130,7 +130,7 @@ export default {
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg:#283443;
-$light_gray:#fff;
+$light_gray:#68b0fe;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -141,6 +141,8 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
+  background-image: url('~@/assets/common/login.jpg');
+  background-position: center;
   .el-input {
     display: inline-block;
     height: 47px;
@@ -162,12 +164,20 @@ $cursor: #fff;
       }
     }
   }
-
+  .loginBtn {
+  background: #407ffe;
+  height: 64px;
+  line-height: 32px;
+  font-size: 24px;
+}
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.7);
     border-radius: 5px;
     color: #454545;
+  }
+  .el-form-item__error {
+    color: #fff;
   }
 }
 </style>
@@ -181,6 +191,7 @@ $light_gray:#eee;
   min-height: 100%;
   width: 100%;
   background-color: $bg;
+  // background: url(../../assets/common/login.jpg);
   overflow: hidden;
 
   .login-form {
