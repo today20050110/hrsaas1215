@@ -1,3 +1,4 @@
+
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
@@ -56,7 +57,9 @@
 </template>
 
 <script>
+/* eslint-disable no-multi-spaces */
 import { validMobile } from '@/utils/validate'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Login',
@@ -95,6 +98,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['user/login']),  // 引入方法
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -106,20 +110,27 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+      // 表單的手動校驗
+      this.$refs.loginForm.validate(async isOK => {
+        if (isOK) {
+          try {
+            this.loading = true
+            // 只有校驗成功之後 我們才去調用 action
+            await this['user/login'](this.loginForm)
+            // 應該登錄成功之後
+            // async標記的函數實際上一個promise對象
+            // await之後的代碼 都是成功執行的代碼
+            this.$router.push('/')
+          } catch (error) {
+            console.log(error)
+          } finally {
+            // 不論執行try 還是catch 都去關閉轉圈
             this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+          }
         }
       })
+      // ref 可以獲取一個元素的dom對象
+      // ref作用到組件上的時候 可以獲取該組件的實例 this
     }
   }
 }

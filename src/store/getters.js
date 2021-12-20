@@ -4,6 +4,9 @@
 const getters = {
     sidebar: state => state.app.sidebar,
     device: state => state.app.device,
-    token: state => state.user.token //建立token的快捷訪問
+    token: state => state.user.token, //建立token的快捷訪問
+    name: state => state.user.userInfo.username, // 建立對於用戶名的快捷訪問
+    userId: state => state.user.userInfo.userId, // 建立對於用戶ID的快捷訪問
+    staffPhoto: state => state.user.userInfo.staffPhoto //建立頭像的快捷訪問
 }
 export default getters

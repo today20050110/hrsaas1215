@@ -11,11 +11,19 @@ export function login(data) {
         data
     })
 }
-
-export function getInfo(token) {
-
+// 獲取用戶資料接口
+export function getUserInfo(token) {
+    return request({
+        url: '/sys/profile',
+        method: 'post'
+    })
 }
-
+// 根據用戶ID 獲取用戶詳情 主要是為了獲取頭像
+export function getUserDetailById(id) {
+    return request({
+        url: `/sys/user/${id}`
+    })
+}
 export function logout() {
 
 }
