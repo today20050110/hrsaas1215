@@ -6,11 +6,11 @@ import store from '@/store'
 import router from '@/router'
 import { Message } from 'element-ui'
 import { getTimeStamp } from '@/utils/auth'
-const TimeOut = 3600 // 定义超时时间
+const TimeOut = 10800 // 定义超时时间
 const service = axios.create({
         // 當執行 npm run dev => .env.development => /api => 跨域代理
         baseURL: process.env.VUE_APP_BASE_API, //  npm run dev => /api  npm run build => /prod-api
-        timeout: 5000 // 設置超時時間
+        timeout: 25000 // 設置超時時間
     })
     // 请求拦截器
 service.interceptors.request.use(config => {
